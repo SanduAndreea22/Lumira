@@ -206,7 +206,7 @@ class CartCheckoutTests(TestCase):
         self.assertEqual(Order.objects.count(), 0)
 
     @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
-    @patch("routines.views.stripe.checkout.Session.create")
+    @patch("routines.views.checkout.stripe.checkout.Session.create")
     def test_checkout_redirects_to_stripe_when_configured(self, mock_create):
         mock_create.return_value = _FakeStripeObject(url="https://checkout.stripe.com/fake-session")
         self.client.post(reverse("add_to_cart", args=[self.product.pk]))
@@ -217,7 +217,7 @@ class CartCheckoutTests(TestCase):
         self.assertTrue(mock_create.called)
 
     @override_settings(STRIPE_WEBHOOK_SECRET="whsec_fake")
-    @patch("routines.views.stripe.Webhook.construct_event")
+    @patch("routines.views.checkout.stripe.Webhook.construct_event")
     def test_webhook_rejects_invalid_signature(self, mock_construct_event):
         mock_construct_event.side_effect = ValueError("bad payload")
         response = self.client.post(
@@ -226,8 +226,8 @@ class CartCheckoutTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
-    @patch("routines.views.stripe.checkout.Session.list_line_items")
-    @patch("routines.views.stripe.checkout.Session.retrieve")
+    @patch("routines.views.checkout.stripe.checkout.Session.list_line_items")
+    @patch("routines.views.checkout.stripe.checkout.Session.retrieve")
     def test_checkout_success_records_order_and_clears_cart(self, mock_retrieve, mock_list_items):
         self.client.post(reverse("add_to_cart", args=[self.product.pk]))
 
@@ -262,7 +262,7 @@ class CartCheckoutTests(TestCase):
         self.assertNotContains(cart_response, self.product.name)
 
     @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
-    @patch("routines.views.stripe.checkout.Session.create")
+    @patch("routines.views.checkout.stripe.checkout.Session.create")
     def test_checkout_failure_shows_friendly_error_instead_of_500(self, mock_create):
         mock_create.side_effect = stripe.error.StripeError("boom")
         self.client.post(reverse("add_to_cart", args=[self.product.pk]))
@@ -271,7 +271,7 @@ class CartCheckoutTests(TestCase):
         self.assertContains(response, "couldn")
 
     @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
-    @patch("routines.views.stripe.checkout.Session.retrieve")
+    @patch("routines.views.checkout.stripe.checkout.Session.retrieve")
     def test_checkout_success_with_bogus_session_id_does_not_crash(self, mock_retrieve):
         mock_retrieve.side_effect = stripe.error.StripeError("No such session")
         response = self.client.get(f"{reverse('checkout_success')}?session_id=cs_bogus")
@@ -279,9 +279,9 @@ class CartCheckoutTests(TestCase):
         self.assertIsNone(response.context["order"])
 
     @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
-    @patch("routines.views.stripe.checkout.Session.retrieve")
+    @patch("routines.views.checkout.stripe.checkout.Session.retrieve")
     def test_record_order_recovers_from_concurrent_create_race(self, mock_retrieve):
-        from routines.views import _record_order_from_stripe_session
+        from routines.views.checkout import _record_order_from_stripe_session
 
         mock_retrieve.return_value = _FakeStripeObject(
             payment_status="paid",
@@ -298,8 +298,8 @@ class CartCheckoutTests(TestCase):
             total=self.product.price,
         )
 
-        with patch("routines.views.Order.objects.filter") as mock_filter, patch(
-            "routines.views.Order.objects.create", side_effect=IntegrityError("duplicate key value")
+        with patch("routines.views.checkout.Order.objects.filter") as mock_filter, patch(
+            "routines.views.checkout.Order.objects.create", side_effect=IntegrityError("duplicate key value")
         ):
             # Our own "does it already exist" check misses the row (that's
             # exactly what makes this a race rather than the normal path).
