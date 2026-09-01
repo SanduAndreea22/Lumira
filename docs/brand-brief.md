@@ -22,10 +22,9 @@ Lumira poate ocupa spațiul dintre cei doi poli: **diagnostic instant, fără ba
 - **Vârstă:** toate vârstele — diagnosticul nu segmentează pe grupă de vârstă (nu există un pas de "câți ani ai" în quiz); concernul principal ("semne de îmbătrânire" vs. "imperfecțiuni") face implicit diferența, nu vârsta declarată.
 - **Buget țintă:** **luxury.** Nu masstige, nu accesibil — catalogul e prețuit ca skincare premium (vezi secțiunea 5 și `routines/migrations/0005_luxury_pricing.py`). Asta ridică miza pe justificarea fiecărui produs din rutină ("de ce ți l-am pus aici" trebuie să simtă premium, nu doar corect).
 - **Unde cumpără:** din Lumira direct — brand propriu (secțiunea 1), nu ghid către retaileri terți.
+- **Nivel de experiență majoritar: începător.** Quiz-ul întreabă asta per utilizator (pasul 3) și tot spectrul rămâne suportat, dar copy-ul de marketing (homepage, onboarding) își asumă că vizitatorul tipic nu are deja o rutină și nu știe jargon — nu optimizează pentru cineva care vrea doar "confirmare" pe o rutină existentă.
 
-Ce rezultă deja din direcția vizuală aleasă (pastel modern, playful dar clean): public digital-first, confortabil cu o experiență de tip quiz/app, sensibil la estetică. Poziționarea luxury nu schimbă identitatea vizuală deja stabilită (secțiunea 6) — rămâne caldă, nu rece/corporate — dar înseamnă că tonul trebuie să sune ca lux accesibil emoțional (gen Aesop, Augustinus Bader), nu ca lux distant.
-
-**Rămâne deschis:** nivelul de experiență cu skincare al publicului majoritar (începător complet vs. cineva cu rutină deja) — quiz-ul deja întreabă asta per utilizator (pasul 3), deci nu blochează build-ul, dar ar conta pentru ce nivel de experiență setăm ca "default"/cel mai comun în copy-ul de marketing (homepage, onboarding).
+Ce rezultă deja din direcția vizuală aleasă (pastel modern, playful dar clean): public digital-first, confortabil cu o experiență de tip quiz/app, sensibil la estetică. Poziționarea luxury nu schimbă identitatea vizuală deja stabilită (secțiunea 6) — rămâne caldă, nu rece/corporate — dar înseamnă că tonul trebuie să sune ca lux accesibil emoțional (gen Aesop, Augustinus Bader), nu ca lux distant. Combinat cu publicul majoritar începător, tensiunea de rezolvat în copy e: **premium, dar niciodată intimidant** — lux care te ghidează, nu lux care presupune că știi deja ce faci.
 
 ## 3. Propunere de valoare
 
