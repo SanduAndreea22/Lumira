@@ -33,8 +33,8 @@ Login/register cu cont (nu doar sesiune) — rutina salvată automat, utilizator
 - **Rutina mea** — rezultatul curent (dimineață/seară), CTA salvare
 - **Produse** — catalog, filtrabil pe concern/tip ten
 - **Cont** — rutinele salvate, istoric, refă diagnosticul
-- **Despre** — brand story (fictiv, scurt)
-- **Contact**
+- **Despre** — brand story (fictiv, scurt) — construit, `/about/`
+- **Contact** — formular simplu (nume, email, mesaj), salvat în DB (`ContactMessage`, vizibil în admin) — construit, `/contact/`
 
 ## Direcție vizuală
 

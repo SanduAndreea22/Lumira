@@ -9,6 +9,8 @@ urlpatterns = [
     path("diagnostic/redo/", views.redo_diagnostic, name="redo_diagnostic"),
     path("routine/", views.routine_result, name="routine_result"),
     path("products/", views.product_catalog, name="product_catalog"),
+    path("about/", views.about, name="about"),
+    path("contact/", views.contact, name="contact"),
     path("routine/save/", views.save_routine, name="save_routine"),
     path("account/signup/", views.signup, name="signup"),
     path(

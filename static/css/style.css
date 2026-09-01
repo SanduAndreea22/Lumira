@@ -366,7 +366,8 @@ footer {
 
 .form-shell input[type="text"],
 .form-shell input[type="email"],
-.form-shell input[type="password"] {
+.form-shell input[type="password"],
+.form-shell textarea {
   width: 100%;
   padding: 12px 14px;
   border-radius: 10px;
@@ -374,6 +375,7 @@ footer {
   margin-bottom: 16px;
   font-family: inherit;
   font-size: 1rem;
+  resize: vertical;
 }
 
 .form-shell label {

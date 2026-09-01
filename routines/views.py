@@ -7,6 +7,7 @@ from django.urls import reverse
 from .diagnostics import build_routine
 from .forms import (
     ConcernStepForm,
+    ContactForm,
     ExperienceStepForm,
     PreferencesStepForm,
     SignUpForm,
@@ -158,6 +159,24 @@ def routine_detail(request, pk):
 def redo_diagnostic(request):
     request.session.pop(SESSION_KEY, None)
     return redirect("diagnostic_step", step_number=1)
+
+
+def about(request):
+    return render(request, "routines/about.html")
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request, "Thanks for reaching out — we'll get back to you within 1-2 business days."
+            )
+            return redirect("contact")
+    else:
+        form = ContactForm()
+    return render(request, "routines/contact.html", {"form": form})
 
 
 def product_catalog(request):

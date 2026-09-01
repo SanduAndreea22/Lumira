@@ -38,7 +38,11 @@
   <div class="container">
     <footer>
       <span><strong>Lumira</strong> — your skincare routine, simplified.</span>
-      <span>Fictional brand, created as a portfolio demonstration project.</span>
+      <span style="display:flex;gap:16px;align-items:center;">
+        <a href="{% url 'about' %}">About</a>
+        <a href="{% url 'contact' %}">Contact</a>
+        <span>Fictional brand, created as a portfolio demonstration project.</span>
+      </span>
     </footer>
   </div>
 </body>

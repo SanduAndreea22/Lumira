@@ -1,6 +1,15 @@
 from django.contrib import admin
 
-from .models import Concern, DiagnosticResult, Product, Routine, RoutineStep, SkinType, UserProfile
+from .models import (
+    Concern,
+    ContactMessage,
+    DiagnosticResult,
+    Product,
+    Routine,
+    RoutineStep,
+    SkinType,
+    UserProfile,
+)
 
 
 @admin.register(Concern)
@@ -44,3 +53,9 @@ class DiagnosticResultAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     list_display = ("user", "default_skin_type", "created_at")
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "created_at")
+    readonly_fields = ("name", "email", "message", "created_at")
