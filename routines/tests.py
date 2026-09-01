@@ -177,3 +177,18 @@ class CartCheckoutTests(TestCase):
 
         cart_response = self.client.get(reverse("cart_view"))
         self.assertNotContains(cart_response, self.product.name)
+
+
+class ProductDetailTests(TestCase):
+    def test_product_detail_loads(self):
+        product = Product.objects.filter(is_active=True).first()
+        response = self.client.get(reverse("product_detail", args=[product.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, product.name)
+
+    def test_inactive_product_detail_404s(self):
+        product = Product.objects.filter(is_active=True).first()
+        product.is_active = False
+        product.save()
+        response = self.client.get(reverse("product_detail", args=[product.pk]))
+        self.assertEqual(response.status_code, 404)

@@ -11,10 +11,10 @@
   </div>
 
   <div class="routine-tags">
-    <span class="tag">{{ routine.diagnostic_result.concern.name }}</span>
+    <span class="tag" style="background:{{ routine.diagnostic_result.concern.accent_color }}22;color:{{ routine.diagnostic_result.concern.accent_color }};">{{ routine.diagnostic_result.concern.name }}</span>
     <span class="tag muted">{{ routine.diagnostic_result.skin_type.name }} skin</span>
   </div>
 
-  {% include "routines/_routine_columns.html" %}
+  {% include "routines/_routine_columns.html" with concern=routine.diagnostic_result.concern %}
 </section>
 {% endblock %}

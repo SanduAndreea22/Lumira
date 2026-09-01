@@ -39,12 +39,43 @@
 
   <div class="container">
     <footer>
-      <span><strong>Lumira</strong> — your skincare routine, simplified.</span>
-      <span style="display:flex;gap:16px;align-items:center;">
-        <a href="{% url 'about' %}">About</a>
-        <a href="{% url 'contact' %}">Contact</a>
+      <div class="footer-grid">
+        <div>
+          <h4>Lumira</h4>
+          <p style="max-width:280px;">A skin diagnostic that skips the guesswork — a routine built around what you actually need, explained in plain language.</p>
+        </div>
+        <div>
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="{% url 'diagnostic_step' step_number=1 %}">Diagnostic</a></li>
+            <li><a href="{% url 'product_catalog' %}">Products</a></li>
+            <li><a href="{% url 'cart_view' %}">Cart</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Account</h4>
+          <ul>
+            {% if user.is_authenticated %}
+              <li><a href="{% url 'my_routines' %}">My routines</a></li>
+              <li><a href="{% url 'logout' %}">Log out</a></li>
+            {% else %}
+              <li><a href="{% url 'login' %}">Log in</a></li>
+              <li><a href="{% url 'signup' %}">Create account</a></li>
+            {% endif %}
+          </ul>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <ul>
+            <li><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>Lumira — your skincare routine, simplified.</span>
         <span>Fictional brand, created as a portfolio demonstration project.</span>
-      </span>
+      </div>
     </footer>
   </div>
 </body>

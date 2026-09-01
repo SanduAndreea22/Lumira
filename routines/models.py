@@ -12,10 +12,20 @@ class Concern(models.Model):
         max_length=120,
         help_text="Headline active ingredient used to explain the treatment step, e.g. 'Hyaluronic acid'.",
     )
+    ingredient_explanation = models.CharField(
+        max_length=240,
+        blank=True,
+        help_text="One-sentence, jargon-free explanation of why the key ingredient works.",
+    )
     icon = models.CharField(
         max_length=40,
         blank=True,
         help_text="Name of a stroke icon used in the UI (e.g. 'droplet').",
+    )
+    accent_color = models.CharField(
+        max_length=7,
+        default="#c2486b",
+        help_text="Hex accent color used to give this concern's routines a distinct identity.",
     )
     order = models.PositiveSmallIntegerField(default=0)
 

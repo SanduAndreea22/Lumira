@@ -367,3 +367,10 @@ def product_catalog(request):
             "selected_skin_type": skin_slug,
         },
     )
+
+
+def product_detail(request, pk):
+    product = get_object_or_404(
+        Product.objects.prefetch_related("concerns", "skin_types"), pk=pk, is_active=True
+    )
+    return render(request, "routines/product_detail.html", {"product": product})

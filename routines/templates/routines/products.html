@@ -28,9 +28,11 @@
   <div class="steps-grid">
     {% for product in products %}
       <div class="card">
-        <div class="step-category">{{ product.get_category_display }}</div>
-        <h3 style="margin:6px 0 8px;">{{ product.name }}</h3>
-        <p style="color:var(--text-muted);font-size:0.9rem;min-height:2.7em;">{{ product.description }}</p>
+        <a href="{% url 'product_detail' pk=product.pk %}" style="text-decoration:none;color:inherit;">
+          <div class="step-category">{{ product.get_category_display }}</div>
+          <h3 style="margin:6px 0 8px;">{{ product.name }}</h3>
+          <p style="color:var(--text-muted);font-size:0.9rem;min-height:2.7em;">{{ product.description }}</p>
+        </a>
         <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
           <strong>${{ product.price|floatformat:2 }}</strong>
           {% if product.is_fragrance_free %}<span class="tag muted">Fragrance-free</span>{% endif %}

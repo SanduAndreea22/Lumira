@@ -11,9 +11,9 @@
   </div>
 
   {% for routine in routines %}
-    <div class="routine-list-item">
+    <div class="routine-list-item" style="--accent: {{ routine.diagnostic_result.concern.accent_color }};">
       <div>
-        <strong>{{ routine.name }}</strong>
+        <span class="routine-accent-dot"></span><strong>{{ routine.name }}</strong>
         {% if routine.is_current %}<span class="tag" style="margin-left:8px;">Current</span>{% endif %}
         <p style="color:var(--text-muted);margin:4px 0 0;">
           {{ routine.diagnostic_result.concern.name }} · saved {{ routine.created_at|date:"M j, Y" }} ·

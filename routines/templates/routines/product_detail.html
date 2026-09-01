@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load routines_extras %}
+{% block title %}{{ product.name }} — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <a href="{% url 'product_catalog' %}" class="btn btn-secondary" style="margin-bottom:24px;">← Back to products</a>
+
+  <div style="display:grid;grid-template-columns:280px 1fr;gap:40px;align-items:start;">
+    <div class="product-hero-art">
+      <div class="product-hero-icon">{% include "routines/_icon.html" with name=product.category|category_icon %}</div>
+    </div>
+
+    <div>
+      <div class="step-category">{{ product.get_category_display }}</div>
+      <h1 style="margin:6px 0 12px;">{{ product.name }}</h1>
+      <p style="color:var(--text-muted);">{{ product.description }}</p>
+      <p style="font-size:1.6rem;font-weight:700;margin:20px 0;">${{ product.price|floatformat:2 }}</p>
+
+      <div class="routine-tags" style="flex-wrap:wrap;">
+        {% for concern in product.concerns.all %}
+          <a href="{% url 'product_catalog' %}?concern={{ concern.slug }}" class="tag" style="text-decoration:none;">{{ concern.name }}</a>
+        {% endfor %}
+        {% if product.is_fragrance_free %}<span class="tag muted">Fragrance-free</span>{% endif %}
+        {% if product.is_vegan %}<span class="tag muted">Vegan</span>{% endif %}
+      </div>
+
+      <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" style="margin-top:28px;max-width:280px;">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Add to cart →</button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

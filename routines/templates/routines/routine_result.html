@@ -11,11 +11,11 @@
   </div>
 
   <div class="routine-tags">
-    <span class="tag">{{ result.concern.name }}</span>
+    <span class="tag" style="background:{{ result.concern.accent_color }}22;color:{{ result.concern.accent_color }};">{{ result.concern.name }}</span>
     <span class="tag muted">{{ result.skin_type.name }} skin</span>
   </div>
 
-  {% include "routines/_routine_columns.html" %}
+  {% include "routines/_routine_columns.html" with concern=result.concern %}
 
   <div class="save-bar">
     <div>

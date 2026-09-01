@@ -10,7 +10,12 @@
             <span>{{ step.product.name }}</span>
             <span style="color:var(--text-muted);white-space:nowrap;">${{ step.product.price|floatformat:2 }}</span>
           </div>
-          <div class="step-reason">{{ step.reason }}</div>
+          <div class="step-reason">
+            {{ step.reason }}
+            {% if concern and concern.ingredient_explanation and step.product.category in "serum,treatment" %}
+              <span class="ingredient-info" tabindex="0" data-tooltip="{{ concern.ingredient_explanation }}">i</span>
+            {% endif %}
+          </div>
         </div>
       </div>
     {% endfor %}
@@ -26,7 +31,12 @@
             <span>{{ step.product.name }}</span>
             <span style="color:var(--text-muted);white-space:nowrap;">${{ step.product.price|floatformat:2 }}</span>
           </div>
-          <div class="step-reason">{{ step.reason }}</div>
+          <div class="step-reason">
+            {{ step.reason }}
+            {% if concern and concern.ingredient_explanation and step.product.category in "serum,treatment" %}
+              <span class="ingredient-info" tabindex="0" data-tooltip="{{ concern.ingredient_explanation }}">i</span>
+            {% endif %}
+          </div>
         </div>
       </div>
     {% endfor %}
