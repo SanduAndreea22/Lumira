@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import Routine
+from .models import ContactMessage, Routine
 
 
 class DiagnosticFlowTests(TestCase):
@@ -40,3 +40,42 @@ class DiagnosticFlowTests(TestCase):
         response = self.client.get(reverse("save_routine"), follow=True)
         self.assertRedirects(response, reverse("my_routines"))
         self.assertEqual(Routine.objects.filter(user__username="andreea").count(), 1)
+
+    def test_signup_next_rejects_external_redirect(self):
+        response = self.client.post(
+            f"{reverse('signup')}?next=https://evil.example/phish",
+            {
+                "username": "someone",
+                "password1": "SuperSecret123!",
+                "password2": "SuperSecret123!",
+            },
+        )
+        self.assertRedirects(response, reverse("home"))
+
+    def test_routine_detail_404s_for_another_users_routine(self):
+        self._answer_quiz()
+        owner = User.objects.create_user(username="owner", password="SuperSecret123!")
+        self.client.login(username="owner", password="SuperSecret123!")
+        self.client.get(reverse("save_routine"))
+        routine = Routine.objects.get(user=owner)
+
+        other = User.objects.create_user(username="someone_else", password="SuperSecret123!")
+        self.client.login(username="someone_else", password="SuperSecret123!")
+        response = self.client.get(reverse("routine_detail", args=[routine.pk]))
+        self.assertEqual(response.status_code, 404)
+
+
+class AboutContactPageTests(TestCase):
+    def test_about_page_loads(self):
+        response = self.client.get(reverse("about"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_contact_form_saves_message(self):
+        response = self.client.post(
+            reverse("contact"),
+            {"name": "Andreea", "email": "andreea@example.com", "message": "Hello!"},
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("contact"))
+        self.assertEqual(ContactMessage.objects.count(), 1)
+        self.assertEqual(ContactMessage.objects.first().email, "andreea@example.com")

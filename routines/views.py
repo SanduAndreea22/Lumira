@@ -1,8 +1,9 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .diagnostics import build_routine
 from .forms import (
@@ -126,7 +127,13 @@ def save_routine(request):
 
 
 def signup(request):
-    next_url = request.GET.get("next") or request.POST.get("next") or "home"
+    next_param = request.GET.get("next") or request.POST.get("next") or ""
+    if url_has_allowed_host_and_scheme(
+        next_param, allowed_hosts={request.get_host()}, require_https=request.is_secure()
+    ):
+        next_url = next_param
+    else:
+        next_url = "home"
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -146,7 +153,9 @@ def my_routines(request):
 
 @login_required
 def routine_detail(request, pk):
-    routine = Routine.objects.prefetch_related("steps__product").get(pk=pk, user=request.user)
+    routine = get_object_or_404(
+        Routine.objects.prefetch_related("steps__product"), pk=pk, user=request.user
+    )
     am_steps = routine.steps.filter(time_of_day="am")
     pm_steps = routine.steps.filter(time_of_day="pm")
     return render(
