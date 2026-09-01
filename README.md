@@ -41,6 +41,10 @@ morning/evening routine → optional account to save it and revisit it later.
   experience level → number of steps).
 - `routines/views.py` + `routines/templates/` — the quiz, routine result,
   sign up/log in, "My routines", and product catalog pages.
+- `routines/cart.py` + the `checkout*` views — a session-based cart and
+  Stripe Checkout (test mode only) for the actual purchase, with a webhook
+  recording paid orders (`Order`/`OrderItem`) independent of the browser
+  redirect.
 
 ### Run it locally
 
@@ -56,6 +60,25 @@ python manage.py runserver
 Visit `http://127.0.0.1:8000/` to take the diagnostic and see a generated
 routine. Product catalog and concerns/skin types are managed at
 `http://127.0.0.1:8000/admin/`.
+
+### Enabling checkout (Stripe test mode)
+
+Without Stripe keys, `/cart/` and the catalog still work, but clicking
+**Checkout** shows a friendly "not configured yet" message instead of
+erroring. To enable it:
+
+1. Create a free [Stripe](https://dashboard.stripe.com/register) account
+   (no business verification needed for test mode) and grab your **test**
+   secret key from the Dashboard.
+2. Set it locally: `export STRIPE_SECRET_KEY=sk_test_...` before
+   `runserver`.
+3. Pay with [any Stripe test card](https://docs.stripe.com/testing), e.g.
+   `4242 4242 4242 4242`, any future expiry, any CVC.
+4. (Optional, for the webhook) run `stripe listen --forward-to
+   127.0.0.1:8000/checkout/webhook/` with the [Stripe CLI](https://docs.stripe.com/stripe-cli)
+   and set the `whsec_...` it prints as `STRIPE_WEBHOOK_SECRET`. Without
+   it, orders are still recorded — via the checkout-success page instead
+   of the webhook.
 
 ### Deploy to Render
 
@@ -75,6 +98,11 @@ In production, `DEBUG=False`, `ALLOWED_HOSTS`/`CSRF_TRUSTED_ORIGINS` are
 derived from Render's `RENDER_EXTERNAL_HOSTNAME`, static files are served by
 WhiteNoise, and the database comes from Render's `DATABASE_URL` — all
 handled in `lumira/settings.py`, no manual config needed beyond the steps
-above.
+above. `render.yaml` also declares `STRIPE_SECRET_KEY` and
+`STRIPE_WEBHOOK_SECRET` as manual secrets (`sync: false`) — Render will
+prompt you for them in the dashboard; paste in **test-mode** keys (see
+above). Point the Stripe Dashboard's webhook endpoint at
+`https://<your-app>.onrender.com/checkout/webhook/`, event
+`checkout.session.completed`, to get the webhook's `whsec_...` value.
 
 > Fictional brand, created as a portfolio demonstration project.

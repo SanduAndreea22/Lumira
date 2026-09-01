@@ -35,6 +35,11 @@
           <strong>${{ product.price|floatformat:2 }}</strong>
           {% if product.is_fragrance_free %}<span class="tag muted">Fragrance-free</span>{% endif %}
         </div>
+        <form method="post" action="{% url 'add_to_cart' pk=product.pk %}" style="margin-top:12px;">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.path }}">
+          <button type="submit" class="btn btn-secondary" style="width:100%;justify-content:center;">Add to cart</button>
+        </form>
       </div>
     {% empty %}
       <p style="color:var(--text-muted);">No products match these filters yet.</p>

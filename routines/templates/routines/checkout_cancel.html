@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Checkout canceled — Lumira{% endblock %}
+{% block content %}
+<div class="form-shell" style="text-align:center;">
+  <h1>Checkout canceled</h1>
+  <p style="color:var(--text-muted);">No charge was made. Your cart is still here whenever you're ready.</p>
+  <a href="{% url 'cart_view' %}" class="btn btn-primary" style="margin-top:16px;">Back to cart →</a>
+</div>
+{% endblock %}

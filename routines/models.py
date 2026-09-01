@@ -164,6 +164,41 @@ class UserProfile(models.Model):
         return f"Profile: {self.user.username}"
 
 
+class Order(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        PAID = "paid", "Paid"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="orders",
+    )
+    stripe_checkout_session_id = models.CharField(max_length=200, unique=True)
+    email = models.EmailField(blank=True)
+    status = models.CharField(max_length=10, choices=Status.choices, default=Status.PENDING)
+    total = models.DecimalField(max_digits=8, decimal_places=2, default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Order #{self.pk} ({self.status})"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="+")
+    quantity = models.PositiveSmallIntegerField(default=1)
+    unit_price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.quantity} x {self.product.name}"
+
+
 class ContactMessage(models.Model):
     class Subject(models.TextChoices):
         ORDER = "order", "An order"

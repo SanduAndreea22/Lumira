@@ -4,6 +4,8 @@ from .models import (
     Concern,
     ContactMessage,
     DiagnosticResult,
+    Order,
+    OrderItem,
     Product,
     Routine,
     RoutineStep,
@@ -60,3 +62,17 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ("name", "email", "subject", "created_at")
     list_filter = ("subject",)
     readonly_fields = ("subject", "name", "email", "message", "created_at")
+
+
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    extra = 0
+    readonly_fields = ("product", "quantity", "unit_price")
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("pk", "email", "status", "total", "created_at")
+    list_filter = ("status",)
+    readonly_fields = ("stripe_checkout_session_id", "user", "email", "status", "total", "created_at")
+    inlines = [OrderItemInline]

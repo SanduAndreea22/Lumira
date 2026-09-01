@@ -83,6 +83,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "routines.context_processors.cart",
             ],
         },
     },
@@ -159,3 +160,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "my_routines"
 LOGOUT_REDIRECT_URL = "home"
+
+# Stripe (test mode). Empty by default: checkout shows a friendly error
+# instead of calling Stripe until real test keys are set via env vars.
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY", "")
+STRIPE_WEBHOOK_SECRET = os.environ.get("STRIPE_WEBHOOK_SECRET", "")

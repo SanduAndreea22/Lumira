@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Your cart — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <h1 style="margin-bottom:4px;">Your cart</h1>
+  <p style="color:var(--text-muted);margin-top:0;">Test-mode checkout — no real charge, this is a portfolio demo.</p>
+
+  {% for item in items %}
+    <div class="step-card">
+      <div style="flex:1;">
+        <div class="step-category">{{ item.product.get_category_display }}</div>
+        <div style="display:flex;justify-content:space-between;gap:12px;">
+          <span>{{ item.product.name }} {% if item.quantity > 1 %}× {{ item.quantity }}{% endif %}</span>
+          <span style="white-space:nowrap;">${{ item.subtotal|floatformat:2 }}</span>
+        </div>
+      </div>
+      <form method="post" action="{% url 'remove_from_cart' pk=item.product.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-ghost" style="padding:8px 14px;">Remove</button>
+      </form>
+    </div>
+  {% empty %}
+    <p style="color:var(--text-muted);">Your cart is empty. <a href="{% url 'product_catalog' %}">Browse products</a> or take the diagnostic to get a routine.</p>
+  {% endfor %}
+
+  {% if items %}
+    <div class="save-bar">
+      <div>
+        <strong>Total</strong>
+        <p style="color:var(--text-muted);margin:4px 0 0;">${{ total|floatformat:2 }}</p>
+      </div>
+      <form method="post" action="{% url 'checkout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Checkout →</button>
+      </form>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

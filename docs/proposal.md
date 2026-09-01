@@ -38,15 +38,25 @@ A browsable `/products` page, filterable by concern and skin type, using the sam
 
 ---
 
-**Total for phases 1-3: ~3–4 weeks, $4,100.** Placeholder product copy and fictive pricing throughout — no real photography needed to start, exactly as you said.
+## Phase 4 — Cart & checkout (Stripe, test mode)
 
-## What I'd hold off on
+Added once phases 1-3 were live and you decided you wanted to actually sell, not just recommend:
 
-Not scoped yet, and I'd rather quote these once phases 1-3 are live and you've seen real usage:
+- Session-based cart (add from the catalog, or "add routine to cart" in one click from a result), a cart page with removal and running total.
+- Stripe Checkout (test mode) for the actual payment — no card numbers touch our server.
+- A webhook (`checkout.session.completed`) records the paid order server-side, independent of whether the customer's browser makes it back to the success page — the more reliable pattern than trusting the redirect alone.
 
-- Checkout / payments (the plan above builds the routine and the catalog, not a cart).
+**Timeline:** 4–6 days. **Cost:** $1,300.
+
+---
+
+**Total for phases 1-4: ~4–5 weeks, $5,400.** Placeholder product copy and fictive pricing throughout — no real photography needed to start, exactly as you said. Test-mode Stripe only — no real charges, by design, until you're ready to go live with real Stripe keys.
+
+## What I'd still hold off on
+
 - A subscription/recurring-box model — only makes sense once you've picked a business model (private label vs. affiliate) for real.
 - Merchandising tools for managing the catalog beyond Django admin.
+- Real Stripe live-mode keys, shipping/tax calculation, order emails — needed before this could take real money.
 
 Happy to start on Phase 1 as soon as you give the go-ahead.
 
@@ -55,4 +65,4 @@ Andreea
 
 ---
 
-*Status in this repo: phases 1-3 above are built — see `routines/diagnostics.py`, `routines/views.py` (`signup`/`my_routines`), and the `/products/` catalog view.*
+*Status in this repo: all four phases above are built — see `routines/diagnostics.py`, `routines/views.py` (`signup`/`my_routines`), the `/products/` catalog view, and `routines/cart.py` + the `checkout*` views for Phase 4.*

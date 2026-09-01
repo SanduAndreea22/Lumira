@@ -35,6 +35,7 @@ Login/register cu cont (nu doar sesiune) — rutina salvată automat, utilizator
 - **Cont** — rutinele salvate, istoric, refă diagnosticul
 - **Despre** — brand story (fictiv, scurt) — construit, `/about/`
 - **Contact** — formular simplu (nume, email, mesaj), salvat în DB (`ContactMessage`, vizibil în admin) — construit, `/contact/`
+- **Coș & checkout** — adaugi produse (individual sau toată rutina dintr-un click), Stripe Checkout (test mode), comandă confirmată prin webhook — construit, `/cart/`, vezi și `docs/proposal.md` (Faza 4)
 
 ## Direcție vizuală
 
