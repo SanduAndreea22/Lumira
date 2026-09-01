@@ -165,6 +165,12 @@ class UserProfile(models.Model):
 
 
 class ContactMessage(models.Model):
+    class Subject(models.TextChoices):
+        ORDER = "order", "An order"
+        PRODUCT = "product", "A product question"
+        OTHER = "other", "Something else"
+
+    subject = models.CharField(max_length=20, choices=Subject.choices, default=Subject.OTHER)
     name = models.CharField(max_length=120)
     email = models.EmailField()
     message = models.TextField()

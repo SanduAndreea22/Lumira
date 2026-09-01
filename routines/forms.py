@@ -44,5 +44,12 @@ class SignUpForm(UserCreationForm):
 class ContactForm(forms.ModelForm):
     class Meta:
         model = ContactMessage
-        fields = ("name", "email", "message")
-        widgets = {"message": forms.Textarea(attrs={"rows": 5})}
+        fields = ("subject", "name", "email", "message")
+        widgets = {
+            "subject": forms.RadioSelect,
+            "message": forms.Textarea(attrs={"rows": 5}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["subject"].initial = ContactMessage.Subject.OTHER

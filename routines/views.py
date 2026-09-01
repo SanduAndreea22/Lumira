@@ -58,17 +58,17 @@ def diagnostic_step(request, step_number):
             initial = {field_name: answers[field_name]}
         form = form_class(initial=initial)
 
-    return render(
-        request,
-        "routines/diagnostic_step.html",
-        {
-            "form": form,
-            "question": question,
-            "step_number": step_number,
-            "total_steps": len(STEPS),
-            "progress_pct": int(step_number / len(STEPS) * 100),
-        },
-    )
+    context = {
+        "form": form,
+        "field_name": field_name,
+        "question": question,
+        "step_number": step_number,
+        "total_steps": len(STEPS),
+        "progress_pct": int(step_number / len(STEPS) * 100),
+    }
+    if field_name == "concern":
+        context["concern_icons"] = {str(c.pk): c.icon for c in Concern.objects.all()}
+    return render(request, "routines/diagnostic_step.html", context)
 
 
 def _result_from_session(request):

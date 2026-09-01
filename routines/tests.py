@@ -73,9 +73,16 @@ class AboutContactPageTests(TestCase):
     def test_contact_form_saves_message(self):
         response = self.client.post(
             reverse("contact"),
-            {"name": "Andreea", "email": "andreea@example.com", "message": "Hello!"},
+            {
+                "subject": "product",
+                "name": "Andreea",
+                "email": "andreea@example.com",
+                "message": "Hello!",
+            },
             follow=True,
         )
         self.assertRedirects(response, reverse("contact"))
         self.assertEqual(ContactMessage.objects.count(), 1)
-        self.assertEqual(ContactMessage.objects.first().email, "andreea@example.com")
+        saved = ContactMessage.objects.first()
+        self.assertEqual(saved.email, "andreea@example.com")
+        self.assertEqual(saved.subject, "product")

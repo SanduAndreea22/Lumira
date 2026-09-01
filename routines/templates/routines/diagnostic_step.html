@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load routines_extras %}
 {% block title %}Diagnostic — Lumira{% endblock %}
 {% block content %}
 <div class="quiz-shell">
@@ -13,7 +14,12 @@
           {% for subwidget in field.subwidgets %}
             <div class="option-card">
               {{ subwidget.tag }}
-              <label for="{{ subwidget.data.attrs.id }}">{{ subwidget.data.label }}</label>
+              <label for="{{ subwidget.data.attrs.id }}">
+                {% if field_name == "concern" %}
+                  <span class="option-icon">{% include "routines/_icon.html" with name=concern_icons|dict_get:subwidget.data.value %}</span>
+                {% endif %}
+                {{ subwidget.data.label }}
+              </label>
             </div>
           {% endfor %}
         </div>

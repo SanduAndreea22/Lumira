@@ -79,6 +79,7 @@ a {
   font-size: 0.95rem;
   cursor: pointer;
   text-decoration: none;
+  transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-primary {
@@ -88,6 +89,13 @@ a {
 
 .btn-primary:hover {
   background: #a83a58;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(194, 72, 107, 0.35);
+}
+
+.btn-secondary:hover,
+.btn-ghost:hover {
+  transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -103,6 +111,40 @@ a {
 
 .hero {
   padding: 72px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero::before {
+  width: 360px;
+  height: 360px;
+  background: var(--pink);
+  opacity: 0.4;
+  top: -120px;
+  right: -80px;
+}
+
+.hero::after {
+  width: 280px;
+  height: 280px;
+  background: var(--lavender);
+  opacity: 0.4;
+  bottom: -140px;
+  right: 220px;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 1;
 }
 
 .eyebrow {
@@ -153,6 +195,12 @@ a {
   border-radius: var(--radius);
   padding: 24px;
   border: 1px solid var(--border);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(36, 28, 46, 0.08);
 }
 
 .step-number {
@@ -169,6 +217,29 @@ a {
 
 .concern-card {
   text-align: center;
+}
+
+.concern-icon {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 12px;
+  color: var(--pink-dark);
+}
+
+.concern-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.option-icon {
+  width: 26px;
+  height: 26px;
+  color: var(--pink-dark);
+}
+
+.option-icon svg {
+  width: 100%;
+  height: 100%;
 }
 
 section {
@@ -208,6 +279,7 @@ footer {
   height: 100%;
   background: var(--pink-dark);
   border-radius: 999px;
+  transition: width 0.35s ease;
 }
 
 .quiz-question {
@@ -254,11 +326,18 @@ footer {
   cursor: pointer;
   font-weight: 600;
   text-align: center;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.option-card label:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36, 28, 46, 0.08);
 }
 
 .option-card input:checked + label {
   border-color: var(--pink-dark);
   box-shadow: 0 0 0 1px var(--pink-dark);
+  transform: scale(1.03);
 }
 
 .option-card.checkbox label {
@@ -317,6 +396,12 @@ footer {
   display: flex;
   gap: 14px;
   align-items: flex-start;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36, 28, 46, 0.08);
 }
 
 .step-order {
@@ -401,6 +486,37 @@ footer {
   border-radius: var(--radius);
   padding: 20px 24px;
   margin-bottom: 16px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.routine-list-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(36, 28, 46, 0.08);
+}
+
+.contact-intro {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 24px;
+}
+
+.contact-avatar {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 50%;
+  background: var(--lavender);
+  color: #443a86;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 700;
 }
 
 @media (max-width: 720px) {

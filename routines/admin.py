@@ -57,5 +57,6 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(ContactMessage)
 class ContactMessageAdmin(admin.ModelAdmin):
-    list_display = ("name", "email", "created_at")
-    readonly_fields = ("name", "email", "message", "created_at")
+    list_display = ("name", "email", "subject", "created_at")
+    list_filter = ("subject",)
+    readonly_fields = ("subject", "name", "email", "message", "created_at")

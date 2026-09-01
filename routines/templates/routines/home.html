@@ -38,6 +38,7 @@
   <div class="concerns-grid">
     {% for concern in concerns %}
       <div class="card concern-card">
+        <div class="concern-icon">{% include "routines/_icon.html" with name=concern.icon %}</div>
         <h3 style="margin:0;font-size:1rem;">{{ concern.name }}</h3>
       </div>
     {% endfor %}
