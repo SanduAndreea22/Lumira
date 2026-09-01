@@ -67,6 +67,11 @@ a {
   color: var(--plum);
 }
 
+.nav-toggle-checkbox,
+.nav-toggle-btn {
+  display: none;
+}
+
 .link-button {
   background: none;
   border: none;
@@ -588,6 +593,31 @@ footer {
   font-family: inherit;
   font-size: 1rem;
   resize: vertical;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-shell input[type="text"]:focus,
+.form-shell input[type="email"]:focus,
+.form-shell input[type="password"]:focus,
+.form-shell textarea:focus {
+  outline: none;
+  border-color: var(--pink-dark);
+  box-shadow: 0 0 0 3px rgba(194, 72, 107, 0.18);
+}
+
+/* Keyboard-focus ring, brand-colored, everywhere else (mouse clicks don't
+   trigger :focus-visible, so this stays invisible for pointer users). */
+a:focus-visible,
+button:focus-visible,
+.link-button:focus-visible {
+  outline: 2px solid var(--pink-dark);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.option-card input:focus-visible + label {
+  outline: 2px solid var(--pink-dark);
+  outline-offset: 2px;
 }
 
 .hp-field {
@@ -695,6 +725,57 @@ footer {
 }
 
 @media (max-width: 720px) {
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .nav-toggle-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+  }
+
+  .nav-toggle-btn span {
+    display: block;
+    height: 2px;
+    background: var(--plum);
+    border-radius: 2px;
+  }
+
+  .nav-links,
+  .nav-cta {
+    display: none;
+  }
+
+  .nav-toggle-checkbox:checked ~ .nav-links {
+    display: flex;
+  }
+
+  .nav-toggle-checkbox:checked ~ .nav-cta {
+    display: inline-flex;
+  }
+
+  .nav-links,
+  .nav-cta {
+    order: 3;
+    width: 100%;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 20px;
+  }
+
+  .nav-cta {
+    justify-content: center;
+    margin-top: 16px;
+  }
+
   .routine-columns, .steps-grid, .concerns-grid, .options-grid {
     grid-template-columns: 1fr;
   }

@@ -13,6 +13,10 @@
   <div class="container">
     <nav class="navbar">
       <a href="{% url 'home' %}" class="brand">✦ Lumira</a>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle-checkbox">
+      <label for="nav-toggle" class="nav-toggle-btn" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </label>
       <div class="nav-links">
         <a href="{% url 'diagnostic_step' step_number=1 %}">Diagnostic</a>
         <a href="{% url 'product_catalog' %}">Products</a>
@@ -24,7 +28,7 @@
           <a href="{% url 'login' %}">Log in</a>
         {% endif %}
       </div>
-      <a href="{% url 'diagnostic_step' step_number=1 %}" class="btn btn-primary">Take the diagnostic</a>
+      <a href="{% url 'diagnostic_step' step_number=1 %}" class="btn btn-primary nav-cta">Take the diagnostic</a>
     </nav>
   </div>
 
