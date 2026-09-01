@@ -17,14 +17,15 @@ Lumira poate ocupa spațiul dintre cei doi poli: **diagnostic instant, fără ba
 
 ## 2. Public țintă detaliat
 
-Ce rezultă deja din direcția vizuală aleasă (pastel modern, playful dar clean): public digital-first, confortabil cu o experiență de tip quiz/app, sensibil la estetică — semnal clar spre Gen Z/millennial, dar fără precizie mai departe de-atât.
+**Rezolvat:**
 
-**De clarificat** — fără răspunsurile astea, copy-ul și logica de recomandare riscă să vorbească generic:
+- **Vârstă:** toate vârstele — diagnosticul nu segmentează pe grupă de vârstă (nu există un pas de "câți ani ai" în quiz); concernul principal ("semne de îmbătrânire" vs. "imperfecțiuni") face implicit diferența, nu vârsta declarată.
+- **Buget țintă:** **luxury.** Nu masstige, nu accesibil — catalogul e prețuit ca skincare premium (vezi secțiunea 5 și `routines/migrations/0005_luxury_pricing.py`). Asta ridică miza pe justificarea fiecărui produs din rutină ("de ce ți l-am pus aici" trebuie să simtă premium, nu doar corect).
+- **Unde cumpără:** din Lumira direct — brand propriu (secțiunea 1), nu ghid către retaileri terți.
 
-- Vârstă exactă (18-24 vs. 25-35 schimbă tonul, prețul perceput ca „normal", și tipul de preocupări dominante — acnee vs. primele semne de îmbătrânire)
-- Nivel de experiență cu skincare al publicului majoritar — începător complet vs. cineva cu rutină deja, care vrea optimizare
-- Buget țintă — accesibil (mass) sau premium accesibil (masstige)?
-- Unde cumpără efectiv: din Lumira direct, sau Lumira e doar ghidul și cumpărarea se întâmplă în altă parte (retailer, alt site)?
+Ce rezultă deja din direcția vizuală aleasă (pastel modern, playful dar clean): public digital-first, confortabil cu o experiență de tip quiz/app, sensibil la estetică. Poziționarea luxury nu schimbă identitatea vizuală deja stabilită (secțiunea 6) — rămâne caldă, nu rece/corporate — dar înseamnă că tonul trebuie să sune ca lux accesibil emoțional (gen Aesop, Augustinus Bader), nu ca lux distant.
+
+**Rămâne deschis:** nivelul de experiență cu skincare al publicului majoritar (începător complet vs. cineva cu rutină deja) — quiz-ul deja întreabă asta per utilizator (pasul 3), deci nu blochează build-ul, dar ar conta pentru ce nivel de experiență setăm ca "default"/cel mai comun în copy-ul de marketing (homepage, onboarding).
 
 ## 3. Propunere de valoare
 
@@ -81,11 +82,11 @@ Patru direcții posibile, fiecare cu implicații diferite:
 
 ## 8. Întrebări deschise
 
-- **Rolul brief-ului** — rămâne strict piesă de portofoliu, sau există intenția de a deveni produs real? Răspunsul schimbă prioritatea tuturor celorlalte puncte.
+- ~~**Rolul brief-ului**~~ — rezolvat: **rămâne demo/portofoliu, momentan.** Nu se prezintă ca produs real, nu se colectează date reale de utilizatori. Dacă asta se schimbă vreodată, monetizarea, GDPR-ul și tot ce ține de "date sensibile" de mai jos trebuie re-evaluate serios.
 - ~~**Model de produs**~~ — rezolvat: brand propriu (private label), nu curatoriere/afiliere (secțiunea 1, secțiunea 7).
-- **Public țintă exact** — vârstă, buget, nivel de experiență (secțiunea 2).
-- **Monetizare** — relevantă doar dacă răspunsul de la primul punct e „da, produs real".
-- **Cât de „medical" poate deveni diagnosticul** — până unde colectezi date sensibile (alergii, sarcină) înainte ca un brand DTC simplu să înceapă să semene cu un serviciu medical, cu tot ce implică asta legal și de încredere.
+- ~~**Public țintă exact**~~ — rezolvat: toate vârstele, buget luxury (secțiunea 2).
+- **Monetizare** — nerelevantă cât timp rămâne demo (punctul de mai sus).
+- ~~**Cât de „medical" poate deveni diagnosticul**~~ — rezolvat: **nu foarte medical, deliberat.** Diagnosticul rămâne la nivel de concern + tip de ten + experiență + preferințe (fragrance-free/vegan) — fără alergii, fără sarcină, fără istoric medical. `DiagnosticResult` nu are și nu va avea câmpuri de date medicale sensibile; asta ține brand-ul clar de partea DTC/lifestyle, nu de partea de serviciu medical (cu tot ce ar implica legal).
 - ~~**Limba interfeței**~~ — rezolvat: site-ul e în engleză (vezi secțiunea 6); mockup-urile în română rămân doar concept vizual intern.
 
 ## Referințe
