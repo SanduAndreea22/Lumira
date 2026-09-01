@@ -1,6 +1,8 @@
 from unittest.mock import patch
 
+import stripe
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
@@ -31,6 +33,13 @@ class DiagnosticFlowTests(TestCase):
         response = self._answer_quiz(experience="beginner")
         self.assertEqual(len(response.context["am_steps"]), 3)
         self.assertEqual(len(response.context["pm_steps"]), 2)
+
+    def test_missing_catalog_product_shows_friendly_error_instead_of_500(self):
+        # If an admin deactivates every SPF product, the routine builder has
+        # nothing to put in that step — should degrade gracefully, not 500.
+        Product.objects.filter(category="spf").update(is_active=False)
+        response = self._answer_quiz()
+        self.assertRedirects(response, reverse("home"))
 
     def test_saving_a_routine_requires_login_then_persists_it(self):
         self._answer_quiz()
@@ -65,6 +74,20 @@ class DiagnosticFlowTests(TestCase):
         self.client.login(username="someone_else", password="SuperSecret123!")
         response = self.client.get(reverse("routine_detail", args=[routine.pk]))
         self.assertEqual(response.status_code, 404)
+
+    def test_logout_link_is_a_post_form_not_a_get_link(self):
+        User.objects.create_user(username="andreea", password="SuperSecret123!")
+        self.client.login(username="andreea", password="SuperSecret123!")
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, f'method="post" action="{reverse("logout")}"')
+
+    def test_logout_works_via_post(self):
+        User.objects.create_user(username="andreea", password="SuperSecret123!")
+        self.client.login(username="andreea", password="SuperSecret123!")
+        response = self.client.post(reverse("logout"))
+        self.assertEqual(response.status_code, 302)
+        response = self.client.get(reverse("my_routines"))
+        self.assertRedirects(response, f"{reverse('login')}?next={reverse('my_routines')}")
 
 
 class AboutContactPageTests(TestCase):
@@ -177,6 +200,56 @@ class CartCheckoutTests(TestCase):
 
         cart_response = self.client.get(reverse("cart_view"))
         self.assertNotContains(cart_response, self.product.name)
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
+    @patch("routines.views.stripe.checkout.Session.create")
+    def test_checkout_failure_shows_friendly_error_instead_of_500(self, mock_create):
+        mock_create.side_effect = stripe.error.StripeError("boom")
+        self.client.post(reverse("add_to_cart", args=[self.product.pk]))
+        response = self.client.post(reverse("checkout"), follow=True)
+        self.assertRedirects(response, reverse("cart_view"))
+        self.assertContains(response, "couldn")
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
+    @patch("routines.views.stripe.checkout.Session.retrieve")
+    def test_checkout_success_with_bogus_session_id_does_not_crash(self, mock_retrieve):
+        mock_retrieve.side_effect = stripe.error.StripeError("No such session")
+        response = self.client.get(f"{reverse('checkout_success')}?session_id=cs_bogus")
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(response.context["order"])
+
+    @override_settings(STRIPE_SECRET_KEY="sk_test_fake")
+    @patch("routines.views.stripe.checkout.Session.retrieve")
+    def test_record_order_recovers_from_concurrent_create_race(self, mock_retrieve):
+        from routines.views import _record_order_from_stripe_session
+
+        mock_retrieve.return_value = _FakeStripeObject(
+            payment_status="paid",
+            amount_total=int(self.product.price * 100),
+            metadata={},
+            customer_details=_FakeStripeObject(email="buyer@example.com"),
+        )
+
+        # Simulate a concurrent request (webhook vs. the success-page hit)
+        # having already committed the row by the time our create() runs.
+        winner = Order.objects.create(
+            stripe_checkout_session_id="cs_test_race",
+            status=Order.Status.PAID,
+            total=self.product.price,
+        )
+
+        with patch("routines.views.Order.objects.filter") as mock_filter, patch(
+            "routines.views.Order.objects.create", side_effect=IntegrityError("duplicate key value")
+        ):
+            # Our own "does it already exist" check misses the row (that's
+            # exactly what makes this a race rather than the normal path).
+            mock_filter.return_value.first.return_value = None
+            order = _record_order_from_stripe_session("cs_test_race")
+
+        # Recovery falls back to a real (unpatched) Order.objects.get, which
+        # finds the row the "other" request committed.
+        self.assertEqual(order, winner)
+        self.assertEqual(Order.objects.filter(stripe_checkout_session_id="cs_test_race").count(), 1)
 
 
 class ProductDetailTests(TestCase):
