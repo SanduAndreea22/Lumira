@@ -36,7 +36,7 @@ def get_items(request):
     cart = _cart_dict(request)
     if not cart:
         return []
-    products = Product.objects.filter(pk__in=cart.keys())
+    products = Product.objects.filter(pk__in=cart.keys(), is_active=True)
     items = []
     for product in products:
         quantity = cart[str(product.pk)]
@@ -51,4 +51,4 @@ def get_total(request):
 
 
 def get_count(request):
-    return sum(_cart_dict(request).values())
+    return sum(item["quantity"] for item in get_items(request))

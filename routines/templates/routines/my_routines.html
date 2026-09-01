@@ -7,7 +7,7 @@
       <h1 style="margin-bottom:4px;">My routines</h1>
       <p style="color:var(--text-muted);margin-top:0;">Welcome back, {{ user.username }}.</p>
     </div>
-    <a href="{% url 'redo_diagnostic' %}" class="btn btn-secondary">Redo diagnostic</a>
+    <form method="post" action="{% url 'redo_diagnostic' %}">{% csrf_token %}<button type="submit" class="btn btn-secondary">Redo diagnostic</button></form>
   </div>
 
   {% for routine in routines %}

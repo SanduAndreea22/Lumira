@@ -42,6 +42,14 @@ class SignUpForm(UserCreationForm):
 
 
 class ContactForm(forms.ModelForm):
+    # Honeypot: invisible to real visitors (hidden via CSS in the template),
+    # but most bots fill in every field they find. Never validated against
+    # the model — if it's non-empty, the view quietly drops the submission.
+    website = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={"autocomplete": "off", "tabindex": "-1"}),
+    )
+
     class Meta:
         model = ContactMessage
         fields = ("subject", "name", "email", "message")
@@ -53,3 +61,6 @@ class ContactForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["subject"].initial = ContactMessage.Subject.OTHER
+
+    def is_spam(self):
+        return bool(self.cleaned_data.get("website"))

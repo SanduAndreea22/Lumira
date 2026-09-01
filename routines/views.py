@@ -1,5 +1,6 @@
 import logging
-from decimal import Decimal
+import time
+from decimal import ROUND_HALF_UP, Decimal
 
 import stripe
 from django.conf import settings
@@ -31,6 +32,11 @@ logger = logging.getLogger(__name__)
 SESSION_KEY = "diagnostic_answers"
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
+def _to_cents(price: Decimal) -> int:
+    """Round (not truncate) a Decimal price to integer cents for Stripe."""
+    return int((price * 100).quantize(Decimal("1"), rounding=ROUND_HALF_UP))
 
 STEPS = [
     ("concern", ConcernStepForm, "What's bothering you the most right now?"),
@@ -135,13 +141,14 @@ def routine_result(request):
     )
 
 
-def save_routine(request):
+def _do_save_routine(request):
+    """Save the session's diagnostic result as a Routine for request.user
+    and return the redirect to send them to. Assumes request.user is
+    authenticated — callers (save_routine, signup) check that first.
+    """
     result = _result_from_session(request)
     if result is None:
         return redirect("diagnostic_step", step_number=1)
-
-    if not request.user.is_authenticated:
-        return redirect(f"{reverse('signup')}?next={reverse('save_routine')}")
 
     result.user = request.user
     result.save()
@@ -161,6 +168,13 @@ def save_routine(request):
     return redirect("my_routines")
 
 
+@require_POST
+def save_routine(request):
+    if not request.user.is_authenticated:
+        return redirect(f"{reverse('signup')}?next={reverse('save_routine')}")
+    return _do_save_routine(request)
+
+
 def signup(request):
     next_param = request.GET.get("next") or request.POST.get("next") or ""
     if url_has_allowed_host_and_scheme(
@@ -174,6 +188,10 @@ def signup(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+            if next_url == reverse("save_routine"):
+                # save_routine is POST-only now; do the save directly
+                # instead of redirecting into a GET on that URL.
+                return _do_save_routine(request)
             return redirect(next_url)
     else:
         form = SignUpForm()
@@ -200,6 +218,7 @@ def routine_detail(request, pk):
     )
 
 
+@require_POST
 def redo_diagnostic(request):
     request.session.pop(SESSION_KEY, None)
     return redirect("diagnostic_step", step_number=1)
@@ -209,14 +228,27 @@ def about(request):
     return render(request, "routines/about.html")
 
 
+CONTACT_THROTTLE_SECONDS = 30
+
+
 def contact(request):
     if request.method == "POST":
         form = ContactForm(request.POST)
         if form.is_valid():
+            success_message = "Thanks for reaching out — we'll get back to you within 1-2 business days."
+            if form.is_spam():
+                # Don't tip off the bot — just pretend it worked.
+                messages.success(request, success_message)
+                return redirect("contact")
+
+            last_submitted = request.session.get("last_contact_submission", 0)
+            if time.time() - last_submitted < CONTACT_THROTTLE_SECONDS:
+                messages.error(request, "You're sending messages too quickly — please wait a moment and try again.")
+                return redirect("contact")
+
             form.save()
-            messages.success(
-                request, "Thanks for reaching out — we'll get back to you within 1-2 business days."
-            )
+            request.session["last_contact_submission"] = time.time()
+            messages.success(request, success_message)
             return redirect("contact")
     else:
         form = ContactForm()
@@ -298,7 +330,7 @@ def checkout(request):
                             "name": item["product"].name,
                             "metadata": {"lumira_product_id": str(item["product"].pk)},
                         },
-                        "unit_amount": int(item["product"].price * 100),
+                        "unit_amount": _to_cents(item["product"].price),
                     },
                     "quantity": item["quantity"],
                 }
@@ -377,6 +409,16 @@ def _record_order_from_stripe_session(session_id):
                 product=product,
                 quantity=line_item.quantity,
                 unit_price=Decimal(line_item.price.unit_amount) / 100,
+            )
+        else:
+            # Paid for, but the product no longer exists in our catalog —
+            # don't drop this silently, someone needs to reconcile it.
+            logger.error(
+                "Order %s: paid line item references missing product_id=%s (%s x %s)",
+                order.pk,
+                product_id,
+                line_item.quantity,
+                line_item.price.unit_amount,
             )
     return order
 

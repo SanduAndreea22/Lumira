@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 
 
 class Concern(models.Model):
@@ -136,11 +136,12 @@ class Routine(models.Model):
     def save(self, *args, **kwargs):
         if not self.name:
             self.name = f"{self.diagnostic_result.concern.name} routine"
-        super().save(*args, **kwargs)
-        if self.is_current and self.user_id:
-            Routine.objects.filter(user_id=self.user_id, is_current=True).exclude(
-                pk=self.pk
-            ).update(is_current=False)
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+            if self.is_current and self.user_id:
+                Routine.objects.filter(user_id=self.user_id, is_current=True).exclude(
+                    pk=self.pk
+                ).update(is_current=False)
 
 
 class RoutineStep(models.Model):

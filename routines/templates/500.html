@@ -1,0 +1,43 @@
+<!-- Deliberately standalone (no extends/url/static template tags) — this
+     page needs to render even if something else in the app is what broke. -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Something went wrong — Lumira</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fbf1ea;
+      color: #241c2e;
+      font-family: -apple-system, "Segoe UI", sans-serif;
+      text-align: center;
+    }
+    .box { max-width: 420px; padding: 0 24px; }
+    h1 { font-size: 1.6rem; margin-bottom: 8px; }
+    p { color: #6b6070; }
+    a {
+      display: inline-block;
+      margin-top: 16px;
+      background: #c2486b;
+      color: #fff;
+      text-decoration: none;
+      padding: 12px 22px;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Something went wrong on our end.</h1>
+    <p>Please try again in a moment. If you were about to check out, no payment was taken.</p>
+    <a href="/">Back to Lumira</a>
+  </div>
+</body>
+</html>

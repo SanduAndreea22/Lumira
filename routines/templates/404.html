@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found — Lumira{% endblock %}
+{% block content %}
+<div class="form-shell" style="text-align:center;">
+  <span class="eyebrow">✦ 404</span>
+  <h1>We couldn't find that page.</h1>
+  <p style="color:var(--text-muted);">The link might be broken, or the page may have moved.</p>
+  <a href="{% url 'home' %}" class="btn btn-primary" style="margin-top:16px;">Back to Lumira →</a>
+</div>
+{% endblock %}

@@ -43,12 +43,12 @@ class DiagnosticFlowTests(TestCase):
 
     def test_saving_a_routine_requires_login_then_persists_it(self):
         self._answer_quiz()
-        response = self.client.get(reverse("save_routine"))
+        response = self.client.post(reverse("save_routine"))
         self.assertRedirects(response, f"{reverse('signup')}?next={reverse('save_routine')}")
 
         User.objects.create_user(username="andreea", password="SuperSecret123!")
         self.client.login(username="andreea", password="SuperSecret123!")
-        response = self.client.get(reverse("save_routine"), follow=True)
+        response = self.client.post(reverse("save_routine"), follow=True)
         self.assertRedirects(response, reverse("my_routines"))
         self.assertEqual(Routine.objects.filter(user__username="andreea").count(), 1)
 
@@ -67,7 +67,7 @@ class DiagnosticFlowTests(TestCase):
         self._answer_quiz()
         owner = User.objects.create_user(username="owner", password="SuperSecret123!")
         self.client.login(username="owner", password="SuperSecret123!")
-        self.client.get(reverse("save_routine"))
+        self.client.post(reverse("save_routine"))
         routine = Routine.objects.get(user=owner)
 
         other = User.objects.create_user(username="someone_else", password="SuperSecret123!")
@@ -88,6 +88,27 @@ class DiagnosticFlowTests(TestCase):
         self.assertEqual(response.status_code, 302)
         response = self.client.get(reverse("my_routines"))
         self.assertRedirects(response, f"{reverse('login')}?next={reverse('my_routines')}")
+
+    def test_save_routine_and_redo_diagnostic_reject_get(self):
+        self._answer_quiz()
+        self.assertEqual(self.client.get(reverse("save_routine")).status_code, 405)
+        self.assertEqual(self.client.get(reverse("redo_diagnostic")).status_code, 405)
+
+    def test_signup_mid_quiz_saves_routine_without_a_get_round_trip(self):
+        # Regression: save_routine is POST-only now, so the post-signup
+        # "continue where you were" flow can't rely on a redirect (which the
+        # browser follows via GET) landing on it.
+        self._answer_quiz()
+        response = self.client.post(
+            f"{reverse('signup')}?next={reverse('save_routine')}",
+            {
+                "username": "mid_quiz_signup",
+                "password1": "SuperSecret123!",
+                "password2": "SuperSecret123!",
+            },
+        )
+        self.assertRedirects(response, reverse("my_routines"))
+        self.assertEqual(Routine.objects.filter(user__username="mid_quiz_signup").count(), 1)
 
 
 class AboutContactPageTests(TestCase):
@@ -111,6 +132,38 @@ class AboutContactPageTests(TestCase):
         saved = ContactMessage.objects.first()
         self.assertEqual(saved.email, "andreea@example.com")
         self.assertEqual(saved.subject, "product")
+
+    def test_contact_honeypot_silently_drops_submission(self):
+        response = self.client.post(
+            reverse("contact"),
+            {
+                "subject": "other",
+                "name": "Bot",
+                "email": "bot@example.com",
+                "message": "buy cheap watches",
+                "website": "http://spam.example",
+            },
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("contact"))
+        self.assertContains(response, "Thanks for reaching out")
+        self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_contact_throttle_blocks_rapid_resubmission(self):
+        data = {"subject": "other", "name": "A", "email": "a@example.com", "message": "hi"}
+        self.client.post(reverse("contact"), data)
+        response = self.client.post(reverse("contact"), data, follow=True)
+        self.assertContains(response, "too quickly")
+        self.assertEqual(ContactMessage.objects.count(), 1)
+
+    def test_contact_throttle_resets_after_the_window(self):
+        data = {"subject": "other", "name": "A", "email": "a@example.com", "message": "hi"}
+        self.client.post(reverse("contact"), data)
+        session = self.client.session
+        session["last_contact_submission"] -= 31
+        session.save()
+        self.client.post(reverse("contact"), data)
+        self.assertEqual(ContactMessage.objects.count(), 2)
 
 
 class _FakeStripeObject(dict):
@@ -136,6 +189,13 @@ class CartCheckoutTests(TestCase):
     def test_remove_from_cart(self):
         self.client.post(reverse("add_to_cart", args=[self.product.pk]))
         self.client.post(reverse("remove_from_cart", args=[self.product.pk]))
+        response = self.client.get(reverse("cart_view"))
+        self.assertNotContains(response, self.product.name)
+
+    def test_cart_drops_a_product_deactivated_after_it_was_added(self):
+        self.client.post(reverse("add_to_cart", args=[self.product.pk]))
+        self.product.is_active = False
+        self.product.save()
         response = self.client.get(reverse("cart_view"))
         self.assertNotContains(response, self.product.name)
 
