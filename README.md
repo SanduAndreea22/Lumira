@@ -14,6 +14,10 @@ documentation language).
 
 ## Docs
 
+- **Client brief:** [`docs/client-brief.md`](./docs/client-brief.md) — the
+  fictional inbound ask that frames this case study.
+- **Proposal:** [`docs/proposal.md`](./docs/proposal.md) — the phased
+  proposal (scope, timeline, cost) written in reply to it.
 - **Concept brief:** [`docs/concept-brief.md`](./docs/concept-brief.md)
   — what it is, diagnostic flow, routine result, user account, site
   structure, visual direction, brand name, tech stack, mock screens.
@@ -36,7 +40,7 @@ morning/evening routine → optional account to save it and revisit it later.
   (concern → key ingredient/treatment step, skin type → product texture,
   experience level → number of steps).
 - `routines/views.py` + `routines/templates/` — the quiz, routine result,
-  sign up/log in, and "My routines" pages.
+  sign up/log in, "My routines", and product catalog pages.
 
 ### Run it locally
 
