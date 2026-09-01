@@ -1,22 +1,24 @@
 {% extends "base.html" %}
 {% block title %}Order confirmed — Lumira{% endblock %}
 {% block content %}
-<div class="form-shell" style="text-align:center;">
-  <span class="eyebrow">✦ Order confirmed</span>
-  <h1>Thank you!</h1>
-  {% if order %}
-    <p style="color:var(--text-muted);">Order #{{ order.pk }} — ${{ order.total|floatformat:2 }} — a confirmation was sent to {{ order.email|default:"your email" }}.</p>
-    <div class="card" style="text-align:left;margin-top:24px;">
-      {% for item in order.items.all %}
-        <div style="display:flex;justify-content:space-between;padding:6px 0;">
-          <span>{{ item.quantity }} × {{ item.product.name }}</span>
-          <span>${{ item.unit_price|floatformat:2 }}</span>
-        </div>
-      {% endfor %}
-    </div>
-  {% else %}
-    <p style="color:var(--text-muted);">Payment received — your order is being confirmed. Check back in a moment.</p>
-  {% endif %}
-  <a href="{% url 'product_catalog' %}" class="btn btn-primary" style="margin-top:24px;">Continue shopping →</a>
-</div>
+<section class="form-page">
+  <div class="form-shell" style="text-align:center;">
+    <span class="eyebrow">✦ Order confirmed</span>
+    <h1>Thank you!</h1>
+    {% if order %}
+      <p style="color:var(--text-muted);">Order #{{ order.pk }} — ${{ order.total|floatformat:2 }} — a confirmation was sent to {{ order.email|default:"your email" }}.</p>
+      <div class="card" style="text-align:left;margin-top:24px;">
+        {% for item in order.items.all %}
+          <div style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span>{{ item.quantity }} × {{ item.product.name }}</span>
+            <span>${{ item.unit_price|floatformat:2 }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p style="color:var(--text-muted);">Payment received — your order is being confirmed. Check back in a moment.</p>
+    {% endif %}
+    <a href="{% url 'product_catalog' %}" class="btn btn-primary" style="margin-top:24px;">Continue shopping →</a>
+  </div>
+</section>
 {% endblock %}

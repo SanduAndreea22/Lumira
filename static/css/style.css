@@ -575,7 +575,40 @@ footer {
 }
 
 /* Forms */
+.form-page {
+  position: relative;
+  overflow: hidden;
+}
+
+.form-page::before,
+.form-page::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.form-page::before {
+  width: 280px;
+  height: 280px;
+  background: var(--pink);
+  top: -80px;
+  left: -110px;
+}
+
+.form-page::after {
+  width: 220px;
+  height: 220px;
+  background: var(--lavender);
+  bottom: -60px;
+  right: -90px;
+}
+
 .form-shell {
+  position: relative;
+  z-index: 1;
   max-width: 420px;
   margin: 60px auto;
   padding: 0 24px;
@@ -641,6 +674,31 @@ button:focus-visible,
   font-size: 0.85rem;
   padding-left: 0;
   list-style: none;
+}
+
+/* Django's password-validator help text renders as a plain <ul> — replace
+   the browser's default black bullets with small brand-pink dots. */
+.form-shell .help-text ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 6px 0 0;
+}
+
+.form-shell .help-text ul li {
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 4px;
+}
+
+.form-shell .help-text ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--pink-dark);
 }
 
 .routine-list-item {
@@ -778,6 +836,9 @@ button:focus-visible,
 
   .routine-columns, .steps-grid, .concerns-grid, .options-grid {
     grid-template-columns: 1fr;
+  }
+  .options-grid.subject-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
   .hero h1 {
     font-size: 2.2rem;

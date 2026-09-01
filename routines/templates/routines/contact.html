@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Contact — Lumira{% endblock %}
 {% block content %}
-<div class="form-shell">
+<section class="form-page">
+  <div class="form-shell">
   <h1>Get in touch</h1>
 
   <div class="contact-intro">
@@ -23,7 +24,7 @@
         {# rendered above, hidden — skip in the normal field loop #}
       {% elif field.field.widget.input_type == "radio" %}
         <label style="margin-bottom:8px;">{{ field.label }}</label>
-        <div class="options-grid" style="margin-bottom:20px;">
+        <div class="options-grid subject-grid" style="margin-bottom:20px;">
           {% for subwidget in field.subwidgets %}
             <div class="option-card">
               {{ subwidget.tag }}
@@ -42,5 +43,6 @@
     <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Send message</button>
   </form>
   <p style="margin-top:16px;color:var(--text-muted);font-size:0.85rem;">You can also reach us at <strong>hello@lumira.example</strong>.</p>
-</div>
+  </div>
+</section>
 {% endblock %}
