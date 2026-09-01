@@ -57,4 +57,24 @@ Visit `http://127.0.0.1:8000/` to take the diagnostic and see a generated
 routine. Product catalog and concerns/skin types are managed at
 `http://127.0.0.1:8000/admin/`.
 
+### Deploy to Render
+
+`render.yaml` is a Render [Blueprint](https://render.com/docs/blueprint-spec):
+it provisions a free Postgres database and a web service that runs
+`migrate`/`collectstatic` on every deploy and serves the app with gunicorn.
+
+1. Push this repo to GitHub (already done if you're reading this on GitHub).
+2. On [Render](https://dashboard.render.com), **New → Blueprint**, connect
+   this repo. Render reads `render.yaml` and provisions the database + web
+   service automatically, generating a random `SECRET_KEY`.
+3. Once deployed, open a shell for the web service (Render dashboard → your
+   service → **Shell**) and run `python manage.py createsuperuser` to get
+   into `/admin/`.
+
+In production, `DEBUG=False`, `ALLOWED_HOSTS`/`CSRF_TRUSTED_ORIGINS` are
+derived from Render's `RENDER_EXTERNAL_HOSTNAME`, static files are served by
+WhiteNoise, and the database comes from Render's `DATABASE_URL` — all
+handled in `lumira/settings.py`, no manual config needed beyond the steps
+above.
+
 > Fictional brand, created as a portfolio demonstration project.
