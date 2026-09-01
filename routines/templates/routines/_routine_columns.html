@@ -1,0 +1,28 @@
+<div class="routine-columns">
+  <div>
+    <div class="routine-heading">☀️ Morning</div>
+    {% for step in am_steps %}
+      <div class="step-card">
+        <div class="step-order">{{ step.order }}</div>
+        <div>
+          <div class="step-category">{{ step.product.get_category_display }}</div>
+          <div>{{ step.product.name }}</div>
+          <div class="step-reason">{{ step.reason }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  <div>
+    <div class="routine-heading">🌙 Evening</div>
+    {% for step in pm_steps %}
+      <div class="step-card">
+        <div class="step-order">{{ step.order }}</div>
+        <div>
+          <div class="step-category">{{ step.product.get_category_display }}</div>
+          <div>{{ step.product.name }}</div>
+          <div class="step-reason">{{ step.reason }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>

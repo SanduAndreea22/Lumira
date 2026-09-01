@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Diagnostic — Lumira{% endblock %}
+{% block content %}
+<div class="quiz-shell">
+  <div class="quiz-progress"><div class="quiz-progress-bar" style="width:{{ progress_pct }}%"></div></div>
+  <p class="quiz-step-label">Question {{ step_number }} of {{ total_steps }}</p>
+  <h1 class="quiz-question">{{ question }}</h1>
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      {% if field.field.widget.input_type == "radio" %}
+        <div class="options-grid">
+          {% for subwidget in field.subwidgets %}
+            <div class="option-card">
+              {{ subwidget.tag }}
+              <label for="{{ subwidget.data.attrs.id }}">{{ subwidget.data.label }}</label>
+            </div>
+          {% endfor %}
+        </div>
+        {% if field.errors %}<ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      {% else %}
+        <div class="option-card checkbox" style="max-width:320px;margin-bottom:12px;">
+          {{ field }}
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        </div>
+      {% endif %}
+    {% endfor %}
+    <div class="quiz-actions">
+      {% if step_number > 1 %}
+        <a href="{% url 'diagnostic_step' step_number=step_number|add:-1 %}" class="btn btn-secondary">← Back</a>
+      {% else %}
+        <span></span>
+      {% endif %}
+      <button type="submit" class="btn btn-primary">
+        {% if step_number == total_steps %}See my routine →{% else %}Continue →{% endif %}
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}

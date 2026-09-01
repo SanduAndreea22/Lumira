@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My routines — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h1 style="margin-bottom:4px;">My routines</h1>
+      <p style="color:var(--text-muted);margin-top:0;">Welcome back, {{ user.username }}.</p>
+    </div>
+    <a href="{% url 'redo_diagnostic' %}" class="btn btn-secondary">Redo diagnostic</a>
+  </div>
+
+  {% for routine in routines %}
+    <div class="routine-list-item">
+      <div>
+        <strong>{{ routine.name }}</strong>
+        {% if routine.is_current %}<span class="tag" style="margin-left:8px;">Current</span>{% endif %}
+        <p style="color:var(--text-muted);margin:4px 0 0;">
+          {{ routine.diagnostic_result.concern.name }} · saved {{ routine.created_at|date:"M j, Y" }} ·
+          {{ routine.steps.count }} steps
+        </p>
+      </div>
+      <a href="{% url 'routine_detail' pk=routine.pk %}" class="btn btn-ghost">View routine →</a>
+    </div>
+  {% empty %}
+    <p style="color:var(--text-muted);">No saved routines yet. <a href="{% url 'diagnostic_step' step_number=1 %}">Take the diagnostic</a> to get one.</p>
+  {% endfor %}
+</section>
+{% endblock %}

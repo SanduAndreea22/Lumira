@@ -1,0 +1,44 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Lumira{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar">
+      <a href="{% url 'home' %}" class="brand">✦ Lumira</a>
+      <div class="nav-links">
+        <a href="{% url 'diagnostic_step' step_number=1 %}">Diagnostic</a>
+        {% if user.is_authenticated %}
+          <a href="{% url 'my_routines' %}">My routines</a>
+          <a href="{% url 'logout' %}">Log out</a>
+        {% else %}
+          <a href="{% url 'login' %}">Log in</a>
+        {% endif %}
+      </div>
+      <a href="{% url 'diagnostic_step' step_number=1 %}" class="btn btn-primary">Take the diagnostic</a>
+    </nav>
+  </div>
+
+  <main class="container">
+    {% if messages %}
+      {% for message in messages %}
+        <p class="tag muted" style="display:inline-block;margin-top:20px;">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <div class="container">
+    <footer>
+      <span><strong>Lumira</strong> — your skincare routine, simplified.</span>
+      <span>Fictional brand, created as a portfolio demonstration project.</span>
+    </footer>
+  </div>
+</body>
+</html>

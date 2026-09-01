@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ routine.name }} — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h1 style="margin-bottom:4px;">{{ routine.name }}</h1>
+      <p style="color:var(--text-muted);margin-top:0;">Saved on {{ routine.created_at|date:"M j, Y" }}{% if routine.is_current %} · current routine{% endif %}</p>
+    </div>
+    <a href="{% url 'my_routines' %}" class="btn btn-secondary">← My routines</a>
+  </div>
+
+  <div class="routine-tags">
+    <span class="tag">{{ routine.diagnostic_result.concern.name }}</span>
+    <span class="tag muted">{{ routine.diagnostic_result.skin_type.name }} skin</span>
+  </div>
+
+  {% include "routines/_routine_columns.html" %}
+</section>
+{% endblock %}

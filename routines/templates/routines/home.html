@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Lumira — Your skincare routine, built for your real skin{% endblock %}
+{% block content %}
+<section class="hero">
+  <span class="eyebrow">✦ Free diagnostic · 60 seconds</span>
+  <h1>Your skincare routine, built for your real skin.</h1>
+  <p>Answer a few simple questions. Get a full morning &amp; evening routine, built for what you actually need — not a generic skin type.</p>
+  <div class="hero-actions">
+    <a href="{% url 'diagnostic_step' step_number=1 %}" class="btn btn-primary">Start the diagnostic →</a>
+    <a href="#how-it-works" class="btn btn-ghost">See how it works ↓</a>
+  </div>
+</section>
+
+<section id="how-it-works">
+  <h2>Three steps, one routine that actually fits</h2>
+  <div class="steps-grid">
+    <div class="card">
+      <div class="step-number">1</div>
+      <h3>Answer a few questions</h3>
+      <p>About your skin, what's bothering you right now, and how familiar you are with a routine.</p>
+    </div>
+    <div class="card">
+      <div class="step-number">2</div>
+      <h3>Get your routine</h3>
+      <p>Step by step, morning and evening, with the reason each product is there.</p>
+    </div>
+    <div class="card">
+      <div class="step-number">3</div>
+      <h3>Save it to your account</h3>
+      <p>Come back anytime and rebuild it whenever your skin's needs change.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Whatever's bothering you right now</h2>
+  <p style="color:var(--text-muted);">The diagnostic covers the most common skin concerns.</p>
+  <div class="concerns-grid">
+    {% for concern in concerns %}
+      <div class="card concern-card">
+        <h3 style="margin:0;font-size:1rem;">{{ concern.name }}</h3>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

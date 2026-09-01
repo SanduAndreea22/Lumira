@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Your routine — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+    <div>
+      <h1 style="margin-bottom:4px;">Your routine</h1>
+      <p style="color:var(--text-muted);margin-top:0;">Built from your answers.</p>
+    </div>
+    <a href="{% url 'redo_diagnostic' %}" class="btn btn-secondary">Redo diagnostic</a>
+  </div>
+
+  <div class="routine-tags">
+    <span class="tag">{{ result.concern.name }}</span>
+    <span class="tag muted">{{ result.skin_type.name }} skin</span>
+  </div>
+
+  {% include "routines/_routine_columns.html" %}
+
+  <div class="save-bar">
+    <div>
+      <strong>Save this routine to your account</strong>
+      <p style="color:var(--text-muted);margin:4px 0 0;">Create a free account to come back anytime and keep your routine history.</p>
+    </div>
+    <a href="{% url 'save_routine' %}" class="btn btn-primary">Save routine</a>
+  </div>
+</section>
+{% endblock %}
