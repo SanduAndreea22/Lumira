@@ -20,7 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ("name", "category", "step_time", "price", "is_active")
     list_filter = ("category", "step_time", "is_active", "is_fragrance_free", "is_vegan")
     filter_horizontal = ("concerns", "skin_types")
-    search_fields = ("name", "brand")
+    search_fields = ("name",)
 
 
 class RoutineStepInline(admin.TabularInline):

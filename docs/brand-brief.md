@@ -13,7 +13,7 @@ Piața de skincare personalizat prin diagnostic are deja doi poli clari:
 
 Lumira poate ocupa spațiul dintre cei doi poli: **diagnostic instant, fără barieră de cunoștințe și fără presiunea unui abonament forțat**. Nu trebuie nici dermatolog, nici să știi ce e niacinamida. Față de Function of Beauty (referința pentru "quiz → produs personalizat" pe haircare), Lumira rămâne mai simplă — nu promite formulare 100% custom, promite claritate: știi exact ce pui pe față și de ce.
 
-**De clarificat, prioritar:** Lumira recomandă produse proprii (brand deține linia, ca Function of Beauty) sau curatoriază produse din alte branduri (model de "asistent de cumpărare")? Alegerea schimbă poziționarea din temelii — brand de produs vs. platformă de recomandare — și ar trebui tranșată înainte de orice altă decizie de conținut sau tech.
+**Rezolvat:** Lumira e brand propriu (private label) — deține linia de produse, ca Function of Beauty, nu curatoriază produse din alte branduri. Fiecare produs din catalog e Lumira; nu există model de "asistent de cumpărare"/afiliere. Asta fixează și modelul de date: `Product` nu are un câmp de brand extern editabil — implicit e „Lumira" pentru orice produs adăugat în catalog.
 
 ## 2. Public țintă detaliat
 
@@ -74,15 +74,15 @@ Cleanser, cremă și SPF rămân „stabile" ca rol în rutină — doar textura
 
 Patru direcții posibile, fiecare cu implicații diferite:
 
-- **Marketplace/afiliere** — recomandă produse din alte branduri, monetizare prin comision. Cost de pornire mic, dar fără control pe formulă sau preț.
-- **Brand propriu (private label)** — Lumira produce/etichetează propriile produse. Marjă mai mare, dar cost și risc de producție/stoc semnificativ.
-- **Abonament pe rutină** — recurring box cu produsele din rutină. Venit predictibil, dar presupune deja o alegere la punctul anterior.
-- **Diagnostic gratuit + upsell** — quizul rămâne gratuit, monetizarea vine din produse sau din funcții avansate (re-diagnostic prioritar, rutină extinsă).
+- ~~**Marketplace/afiliere**~~ — exclus (secțiunea 1): Lumira nu recomandă produse din alte branduri.
+- **Brand propriu (private label)** — **ales.** Lumira produce/etichetează propriile produse. Marjă mai mare, dar cost și risc de producție/stoc semnificativ — pentru stadiul de portofoliu, catalogul e fictiv (produse și prețuri demo), fără producție reală în spate.
+- **Abonament pe rutină** — recurring box cu produsele din rutină. Venit predictibil, se pliază natural pe un brand propriu; rămâne o extensie posibilă peste catalogul actual, nu implementată încă.
+- **Diagnostic gratuit + upsell** — quizul rămâne gratuit, monetizarea vine din produse (catalogul propriu) sau din funcții avansate (re-diagnostic prioritar, rutină extinsă).
 
 ## 8. Întrebări deschise
 
 - **Rolul brief-ului** — rămâne strict piesă de portofoliu, sau există intenția de a deveni produs real? Răspunsul schimbă prioritatea tuturor celorlalte puncte.
-- **Model de produs** — brand propriu vs. curatoriere/afiliere (secțiunea 1) — decizie cu impact direct asupra modelului de date (`Product`) din brief-ul tehnic deja scris.
+- ~~**Model de produs**~~ — rezolvat: brand propriu (private label), nu curatoriere/afiliere (secțiunea 1, secțiunea 7).
 - **Public țintă exact** — vârstă, buget, nivel de experiență (secțiunea 2).
 - **Monetizare** — relevantă doar dacă răspunsul de la primul punct e „da, produs real".
 - **Cât de „medical" poate deveni diagnosticul** — până unde colectezi date sensibile (alergii, sarcină) înainte ca un brand DTC simplu să înceapă să semene cu un serviciu medical, cu tot ce implică asta legal și de încredere.

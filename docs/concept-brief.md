@@ -47,9 +47,13 @@ Login/register cu cont (nu doar sesiune) — rutina salvată automat, utilizator
 
 **Lumira** — ales pornind de la „luminozitate"/lumină, una dintre cele 6 preocupări din diagnostic; se potrivește direcției soft-pastel și e ușor de reținut/pronunțat.
 
-## Tech (pentru build ulterior)
+## Model de produs
 
-Django. Models: `Concern`, `SkinType`, `Product` (categorie, concern-uri adresate, pas AM/PM), `DiagnosticResult`, `Routine`, `RoutineStep`, `UserProfile` (auth Django standard). Logica de diagnostic: mapare simplă concern + tip ten + nivel experiență → query produse pe categorie, ordonate în pașii rutinei.
+**Brand propriu (private label)** — Lumira deține și „produce" propria linie; nu curatoriază/afiliază produse din alte branduri (vezi `docs/brand-brief.md`, secțiunea 1 și 7). Catalogul e fictiv (produse și prețuri demo), fără producție reală în spate — dar toate produsele din `Product` sunt Lumira, nu un brand extern editabil per produs.
+
+## Tech (build)
+
+Django (`lumira/` proiect, app `routines`). Models: `Concern`, `SkinType`, `Product` (categorie, concern-uri adresate, pas AM/PM), `DiagnosticResult`, `Routine`, `RoutineStep`, `UserProfile` (auth Django standard). Logica de diagnostic (`routines/diagnostics.py`): mapare concern + tip ten + nivel experiență → query produse pe categorie, ordonate în pașii rutinei. Cont utilizator cu Django auth (register/login/logout), rutini salvate per user, „Rutina curentă" marcată automat. Vezi `README.md` pentru instrucțiuni de rulare locală.
 
 ## Reguli de conținut
 

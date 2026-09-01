@@ -68,7 +68,6 @@ def seed_data(apps, schema_editor):
     for name, category, step_time, skin_slugs, concern_slugs, description in PRODUCTS:
         product = Product.objects.create(
             name=name,
-            brand="Lumira",
             category=category,
             step_time=step_time,
             description=description,

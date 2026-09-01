@@ -41,6 +41,8 @@ class SkinType(models.Model):
 
 
 class Product(models.Model):
+    # Private-label brand: every product in the catalog is Lumira's own, so
+    # there's deliberately no external "brand" field to fill in.
     class Category(models.TextChoices):
         CLEANSER = "cleanser", "Cleanser"
         SERUM = "serum", "Treatment serum"
@@ -56,7 +58,6 @@ class Product(models.Model):
         BOTH = "both", "Morning & evening"
 
     name = models.CharField(max_length=120)
-    brand = models.CharField(max_length=80, default="Lumira", blank=True)
     category = models.CharField(max_length=20, choices=Category.choices)
     step_time = models.CharField(max_length=4, choices=StepTime.choices, default=StepTime.BOTH)
     description = models.TextField(blank=True)
