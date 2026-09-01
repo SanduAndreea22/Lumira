@@ -12,7 +12,7 @@ from .forms import (
     SignUpForm,
     SkinTypeStepForm,
 )
-from .models import Concern, DiagnosticResult, Routine, SkinType
+from .models import Concern, DiagnosticResult, Product, Routine, SkinType
 
 SESSION_KEY = "diagnostic_answers"
 
@@ -158,3 +158,24 @@ def routine_detail(request, pk):
 def redo_diagnostic(request):
     request.session.pop(SESSION_KEY, None)
     return redirect("diagnostic_step", step_number=1)
+
+
+def product_catalog(request):
+    products = Product.objects.filter(is_active=True).prefetch_related("concerns", "skin_types")
+    concern_slug = request.GET.get("concern") or ""
+    skin_slug = request.GET.get("skin_type") or ""
+    if concern_slug:
+        products = products.filter(concerns__slug=concern_slug)
+    if skin_slug:
+        products = products.filter(skin_types__slug=skin_slug)
+    return render(
+        request,
+        "routines/products.html",
+        {
+            "products": products.distinct(),
+            "concerns": Concern.objects.all(),
+            "skin_types": SkinType.objects.all(),
+            "selected_concern": concern_slug,
+            "selected_skin_type": skin_slug,
+        },
+    )

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Products — Lumira{% endblock %}
+{% block content %}
+<section style="padding-top:48px;">
+  <h1 style="margin-bottom:4px;">Products</h1>
+  <p style="color:var(--text-muted);margin-top:0;">The full Lumira catalog. Filter by concern or skin type, or take the diagnostic to get a routine built for you.</p>
+
+  <div style="margin-bottom:12px;">
+    <span style="font-weight:600;font-size:0.85rem;margin-right:8px;">Concern:</span>
+    <a href="?{% if selected_skin_type %}skin_type={{ selected_skin_type }}{% endif %}" class="tag {% if not selected_concern %}{% else %}muted{% endif %}" style="text-decoration:none;margin-right:6px;">All</a>
+    {% for concern in concerns %}
+      <a href="?concern={{ concern.slug }}{% if selected_skin_type %}&skin_type={{ selected_skin_type }}{% endif %}"
+         class="tag {% if selected_concern == concern.slug %}{% else %}muted{% endif %}"
+         style="text-decoration:none;margin-right:6px;">{{ concern.name }}</a>
+    {% endfor %}
+  </div>
+
+  <div style="margin-bottom:32px;">
+    <span style="font-weight:600;font-size:0.85rem;margin-right:8px;">Skin type:</span>
+    <a href="?{% if selected_concern %}concern={{ selected_concern }}{% endif %}" class="tag {% if not selected_skin_type %}{% else %}muted{% endif %}" style="text-decoration:none;margin-right:6px;">All</a>
+    {% for skin_type in skin_types %}
+      <a href="?skin_type={{ skin_type.slug }}{% if selected_concern %}&concern={{ selected_concern }}{% endif %}"
+         class="tag {% if selected_skin_type == skin_type.slug %}{% else %}muted{% endif %}"
+         style="text-decoration:none;margin-right:6px;">{{ skin_type.name }}</a>
+    {% endfor %}
+  </div>
+
+  <div class="steps-grid">
+    {% for product in products %}
+      <div class="card">
+        <div class="step-category">{{ product.get_category_display }}</div>
+        <h3 style="margin:6px 0 8px;">{{ product.name }}</h3>
+        <p style="color:var(--text-muted);font-size:0.9rem;min-height:2.7em;">{{ product.description }}</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;">
+          <strong>${{ product.price|floatformat:2 }}</strong>
+          {% if product.is_fragrance_free %}<span class="tag muted">Fragrance-free</span>{% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <p style="color:var(--text-muted);">No products match these filters yet.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

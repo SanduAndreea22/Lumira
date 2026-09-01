@@ -4,9 +4,12 @@
     {% for step in am_steps %}
       <div class="step-card">
         <div class="step-order">{{ step.order }}</div>
-        <div>
+        <div style="flex:1;">
           <div class="step-category">{{ step.product.get_category_display }}</div>
-          <div>{{ step.product.name }}</div>
+          <div style="display:flex;justify-content:space-between;gap:12px;">
+            <span>{{ step.product.name }}</span>
+            <span style="color:var(--text-muted);white-space:nowrap;">${{ step.product.price|floatformat:2 }}</span>
+          </div>
           <div class="step-reason">{{ step.reason }}</div>
         </div>
       </div>
@@ -17,9 +20,12 @@
     {% for step in pm_steps %}
       <div class="step-card">
         <div class="step-order">{{ step.order }}</div>
-        <div>
+        <div style="flex:1;">
           <div class="step-category">{{ step.product.get_category_display }}</div>
-          <div>{{ step.product.name }}</div>
+          <div style="display:flex;justify-content:space-between;gap:12px;">
+            <span>{{ step.product.name }}</span>
+            <span style="color:var(--text-muted);white-space:nowrap;">${{ step.product.price|floatformat:2 }}</span>
+          </div>
           <div class="step-reason">{{ step.reason }}</div>
         </div>
       </div>
